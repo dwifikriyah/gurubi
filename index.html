@@ -1,0 +1,1018 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Materi Anekdot Interaktif</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&amp;family=Comic+Neue:wght@400;700&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Nunito', sans-serif; }
+    .comic-font { font-family: 'Comic Neue', cursive; }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes bounce-slow {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    @keyframes slide-in {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    .float-animation { animation: float 3s ease-in-out infinite; }
+    .bounce-animation { animation: bounce-slow 2s ease-in-out infinite; }
+    .slide-in { animation: slide-in 0.5s ease-out forwards; }
+    
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    
+    .tab-active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    
+    .structure-card {
+      border-left: 4px solid;
+      transition: all 0.3s ease;
+    }
+    .structure-card:hover {
+      transform: scale(1.02);
+    }
+    
+    .quiz-option {
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .quiz-option:hover {
+      transform: translateX(5px);
+    }
+    .quiz-option.selected {
+      border-color: #667eea;
+      background: #eef2ff;
+    }
+    .quiz-option.correct {
+      border-color: #10b981;
+      background: #d1fae5;
+    }
+    .quiz-option.incorrect {
+      border-color: #ef4444;
+      background: #fee2e2;
+    }
+    
+    .progress-bar {
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      transition: width 0.5s ease;
+    }
+    
+    .blob {
+      border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+      animation: blob-morph 8s ease-in-out infinite;
+    }
+    
+    @keyframes blob-morph {
+      0%, 100% { border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%; }
+      25% { border-radius: 58% 42% 30% 70% / 55% 45% 45% 55%; }
+      50% { border-radius: 30% 70% 58% 42% / 45% 55% 55% 45%; }
+      75% { border-radius: 70% 30% 42% 58% / 55% 55% 45% 45%; }
+    }
+    
+    .illustration-container svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+  <div id="app" class="h-full overflow-auto"><!-- Header -->
+   <header class="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white py-8 px-4">
+    <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 blob"></div>
+    <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 blob" style="animation-delay: -4s;"></div>
+    <div class="max-w-6xl mx-auto relative z-10">
+     <div class="flex items-center gap-4 mb-4">
+      <div class="text-5xl float-animation">
+       📚
+      </div>
+      <div>
+       <h1 id="page-title" class="text-3xl md:text-4xl font-extrabold">Belajar Anekdot Seru!</h1>
+       <p class="text-purple-100 mt-1">Pelajaran Bahasa Indonesia Kelas X</p>
+      </div>
+     </div>
+     <p id="teacher-info" class="text-purple-100 text-sm">👩‍🏫 Guru:Dwi Fikriyah</p>
+    </div>
+   </header><!-- Navigation Tabs -->
+   <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-md">
+    <div class="max-w-6xl mx-auto px-4">
+     <div class="flex gap-2 py-3 overflow-x-auto"><button onclick="switchTab('catatan')" id="tab-catatan" class="tab-btn px-4 py-2 rounded-full font-semibold text-sm whitespace-nowrap transition-all tab-active"> 📝 Catatan Anekdot </button> <button onclick="switchTab('teks')" id="tab-teks" class="tab-btn px-4 py-2 rounded-full font-semibold text-sm whitespace-nowrap transition-all bg-gray-100 hover:bg-gray-200"> 📖 Teks Anekdot </button> <button onclick="switchTab('contoh')" id="tab-contoh" class="tab-btn px-4 py-2 rounded-full font-semibold text-sm whitespace-nowrap transition-all bg-gray-100 hover:bg-gray-200"> 🎭 Contoh &amp; Ilustrasi </button> <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn px-4 py-2 rounded-full font-semibold text-sm whitespace-nowrap transition-all bg-gray-100 hover:bg-gray-200"> 🎯 Latihan Soal </button> <button onclick="switchTab('tugas')" id="tab-tugas" class="tab-btn px-4 py-2 rounded-full font-semibold text-sm whitespace-nowrap transition-all bg-gray-100 hover:bg-gray-200"> 📤 Unggah Tugas </button>
+     </div>
+    </div>
+   </nav><!-- Main Content -->
+   <main class="max-w-6xl mx-auto px-4 py-8"><!-- Tab: Catatan Anekdot -->
+    <section id="section-catatan" class="tab-content">
+     <div class="grid md:grid-cols-2 gap-6"><!-- Pengertian -->
+      <div class="card-hover bg-white rounded-2xl p-6 shadow-lg">
+       <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center text-2xl">
+         📋
+        </div>
+        <h2 class="text-xl font-bold text-gray-800">Pengertian Catatan Anekdot</h2>
+       </div>
+       <div class="bg-blue-50 rounded-xl p-4 mb-4">
+        <p class="text-gray-700 leading-relaxed"><strong class="text-blue-600">Catatan anekdot</strong> adalah catatan singkat yang dibuat guru untuk merekam peristiwa atau perilaku <strong>unik, bermakna, dan penting</strong> dari peserta didik dalam kegiatan pembelajaran sehari-hari.</p>
+       </div>
+       <div class="flex items-start gap-2 text-sm text-gray-600"><span class="text-xl">💡</span>
+        <p>Catatan ini bersifat <em>objektif</em> (apa adanya) dan digunakan untuk memahami perkembangan siswa secara mendalam.</p>
+       </div>
+      </div><!-- Ilustrasi Catatan Anekdot -->
+      <div class="card-hover bg-white rounded-2xl p-6 shadow-lg">
+       <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2"><span class="text-2xl">🎨</span> Ilustrasi Catatan Anekdot</h3>
+       <div class="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-4">
+        <svg viewbox="0 0 300 200" class="w-full"><!-- Background --> <rect x="20" y="20" width="260" height="160" rx="10" fill="#fff" stroke="#e5e7eb" stroke-width="2" /> <!-- Header --> <rect x="20" y="20" width="260" height="35" rx="10" fill="#4f46e5" /> <text x="150" y="43" text-anchor="middle" fill="white" font-size="12" font-weight="bold">
+          CATATAN ANEKDOT
+         </text> <!-- Lines --> <line x1="35" y1="70" x2="265" y2="70" stroke="#e5e7eb" stroke-width="1" /> <text x="35" y="68" fill="#6b7280" font-size="9">
+          Nama: Andi
+         </text> <line x1="35" y1="90" x2="265" y2="90" stroke="#e5e7eb" stroke-width="1" /> <text x="35" y="88" fill="#6b7280" font-size="9">
+          Tanggal: 15 Jan 2024
+         </text> <line x1="35" y1="110" x2="265" y2="110" stroke="#e5e7eb" stroke-width="1" /> <line x1="35" y1="130" x2="265" y2="130" stroke="#e5e7eb" stroke-width="1" /> <text x="35" y="125" fill="#374151" font-size="8">
+          Andi membantu temannya yang kesulitan...
+         </text> <line x1="35" y1="150" x2="265" y2="150" stroke="#e5e7eb" stroke-width="1" /> <!-- Pencil icon --> <g transform="translate(240, 140)">
+          <rect x="0" y="0" width="25" height="6" rx="1" fill="#f59e0b" transform="rotate(-45)" />
+          <polygon points="0,6 -4,12 2,8" fill="#fbbf24" transform="rotate(-45)" />
+         </g>
+        </svg>
+       </div>
+      </div><!-- Struktur -->
+      <div class="card-hover bg-white rounded-2xl p-6 shadow-lg">
+       <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center text-2xl">
+         🏗️
+        </div>
+        <h2 class="text-xl font-bold text-gray-800">Struktur Catatan Anekdot</h2>
+       </div>
+       <div class="space-y-3">
+        <div class="structure-card bg-green-50 rounded-lg p-3 border-l-green-500">
+         <h4 class="font-bold text-green-700">1. Identitas</h4>
+         <p class="text-sm text-gray-600">Nama siswa, kelas, tanggal, waktu kejadian</p>
+        </div>
+        <div class="structure-card bg-blue-50 rounded-lg p-3 border-l-blue-500">
+         <h4 class="font-bold text-blue-700">2. Deskripsi Peristiwa</h4>
+         <p class="text-sm text-gray-600">Uraian kejadian secara objektif dan faktual</p>
+        </div>
+        <div class="structure-card bg-purple-50 rounded-lg p-3 border-l-purple-500">
+         <h4 class="font-bold text-purple-700">3. Interpretasi/Analisis</h4>
+         <p class="text-sm text-gray-600">Penilaian guru terhadap peristiwa tersebut</p>
+        </div>
+        <div class="structure-card bg-orange-50 rounded-lg p-3 border-l-orange-500">
+         <h4 class="font-bold text-orange-700">4. Rekomendasi</h4>
+         <p class="text-sm text-gray-600">Tindak lanjut atau saran untuk siswa</p>
+        </div>
+       </div>
+      </div><!-- Fungsi -->
+      <div class="card-hover bg-white rounded-2xl p-6 shadow-lg">
+       <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 bg-gradient-to-br from-pink-400 to-pink-600 rounded-xl flex items-center justify-center text-2xl">
+         🎯
+        </div>
+        <h2 class="text-xl font-bold text-gray-800">Fungsi &amp; Manfaat</h2>
+       </div>
+       <div class="space-y-3">
+        <div class="flex items-start gap-3 p-3 bg-pink-50 rounded-lg"><span class="text-2xl">👁️</span>
+         <div>
+          <h4 class="font-semibold text-gray-800">Memantau Perkembangan</h4>
+          <p class="text-sm text-gray-600">Mencatat kemajuan belajar siswa secara berkala</p>
+         </div>
+        </div>
+        <div class="flex items-start gap-3 p-3 bg-indigo-50 rounded-lg"><span class="text-2xl">🔍</span>
+         <div>
+          <h4 class="font-semibold text-gray-800">Identifikasi Potensi</h4>
+          <p class="text-sm text-gray-600">Menemukan bakat dan keunikan setiap siswa</p>
+         </div>
+        </div>
+        <div class="flex items-start gap-3 p-3 bg-teal-50 rounded-lg"><span class="text-2xl">💬</span>
+         <div>
+          <h4 class="font-semibold text-gray-800">Bahan Komunikasi</h4>
+          <p class="text-sm text-gray-600">Dasar diskusi dengan orang tua/wali siswa</p>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section><!-- Tab: Teks Anekdot -->
+    <section id="section-teks" class="tab-content hidden">
+     <div class="grid md:grid-cols-2 gap-6"><!-- Pengertian -->
+      <div class="card-hover bg-white rounded-2xl p-6 shadow-lg">
+       <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center text-2xl">
+         📖
+        </div>
+        <h2 class="text-xl font-bold text-gray-800">Pengertian Teks Anekdot</h2>
+       </div>
+       <div class="bg-amber-50 rounded-xl p-4 mb-4">
+        <p class="text-gray-700 leading-relaxed"><strong class="text-amber-600">Teks anekdot</strong> adalah cerita singkat yang <strong>lucu dan menghibur</strong>, namun mengandung <strong>sindiran atau kritik</strong> terhadap kejadian, tokoh, atau kebiasaan tertentu dalam masyarakat.</p>
+       </div>
+       <div class="flex items-start gap-2 text-sm text-gray-600 bg-gray-50 p-3 rounded-lg"><span class="text-xl">🎭</span>
+        <p>Berbeda dengan lelucon biasa, anekdot memiliki <em>pesan moral</em> atau kritik sosial yang disampaikan secara halus melalui humor!</p>
+       </div>
+      </div><!-- Ilustrasi Teks Anekdot -->
+      <div class="card-hover bg-white rounded-2xl p-6 shadow-lg">
+       <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2"><span class="text-2xl">🎨</span> Ilustrasi Teks Anekdot</h3>
+       <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4">
+        <svg viewbox="0 0 300 200" class="w-full"><!-- Speech bubbles scene --> <ellipse cx="80" cy="150" rx="50" ry="30" fill="#e0e7ff" /> <!-- Person 1 --> <circle cx="80" cy="120" r="20" fill="#fbbf24" /> <circle cx="74" cy="115" r="3" fill="#1f2937" /> <circle cx="86" cy="115" r="3" fill="#1f2937" /> <path d="M72 125 Q80 130 88 125" stroke="#1f2937" stroke-width="2" fill="none" /> <!-- Person 2 --> <ellipse cx="220" cy="150" rx="50" ry="30" fill="#dbeafe" /> <circle cx="220" cy="120" r="20" fill="#60a5fa" /> <circle cx="214" cy="115" r="3" fill="#1f2937" /> <circle cx="226" cy="115" r="3" fill="#1f2937" /> <ellipse cx="220" cy="127" rx="6" ry="4" fill="#1f2937" /> <!-- Speech bubble 1 --> <path d="M30 30 L130 30 L130 70 L90 70 L80 85 L75 70 L30 70 Z" fill="white" stroke="#4f46e5" stroke-width="2" /> <text x="80" y="50" text-anchor="middle" font-size="9" fill="#374151">
+          Pak, kenapa jalanan
+         </text> <text x="80" y="62" text-anchor="middle" font-size="9" fill="#374151">
+          selalu berlubang?
+         </text> <!-- Speech bubble 2 --> <path d="M170 30 L270 30 L270 80 L230 80 L220 95 L215 80 L170 80 Z" fill="white" stroke="#f59e0b" stroke-width="2" /> <text x="220" y="48" text-anchor="middle" font-size="9" fill="#374151">
+          Itu supaya orang
+         </text> <text x="220" y="60" text-anchor="middle" font-size="9" fill="#374151">
+          lebih berhati-hati
+         </text> <text x="220" y="72" text-anchor="middle" font-size="9" fill="#374151">
+          dalam hidup! 😂
+         </text> <!-- Laugh effect --> <text x="150" y="170" text-anchor="middle" font-size="20">
+          😄
+         </text>
+        </svg>
+       </div>
+      </div><!-- Struktur -->
+      <div class="card-hover bg-white rounded-2xl p-6 shadow-lg md:col-span-2">
+       <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-xl flex items-center justify-center text-2xl">
+         🏛️
+        </div>
+        <h2 class="text-xl font-bold text-gray-800">Struktur Teks Anekdot</h2>
+       </div>
+       <div class="grid md:grid-cols-5 gap-3">
+        <div class="structure-card bg-red-50 rounded-lg p-4 border-l-red-500">
+         <div class="text-3xl mb-2">
+          1️⃣
+         </div>
+         <h4 class="font-bold text-red-700">Abstraksi</h4>
+         <p class="text-sm text-gray-600 mt-1">Pengantar/gambaran umum cerita</p>
+        </div>
+        <div class="structure-card bg-orange-50 rounded-lg p-4 border-l-orange-500">
+         <div class="text-3xl mb-2">
+          2️⃣
+         </div>
+         <h4 class="font-bold text-orange-700">Orientasi</h4>
+         <p class="text-sm text-gray-600 mt-1">Pengenalan tokoh, waktu, tempat</p>
+        </div>
+        <div class="structure-card bg-yellow-50 rounded-lg p-4 border-l-yellow-500">
+         <div class="text-3xl mb-2">
+          3️⃣
+         </div>
+         <h4 class="font-bold text-yellow-700">Krisis</h4>
+         <p class="text-sm text-gray-600 mt-1">Munculnya masalah/konflik</p>
+        </div>
+        <div class="structure-card bg-green-50 rounded-lg p-4 border-l-green-500">
+         <div class="text-3xl mb-2">
+          4️⃣
+         </div>
+         <h4 class="font-bold text-green-700">Reaksi</h4>
+         <p class="text-sm text-gray-600 mt-1">Penyelesaian yang mengejutkan/lucu</p>
+        </div>
+        <div class="structure-card bg-blue-50 rounded-lg p-4 border-l-blue-500">
+         <div class="text-3xl mb-2">
+          5️⃣
+         </div>
+         <h4 class="font-bold text-blue-700">Koda</h4>
+         <p class="text-sm text-gray-600 mt-1">Penutup/kesimpulan cerita</p>
+        </div>
+       </div>
+      </div><!-- Fungsi Sosial -->
+      <div class="card-hover bg-white rounded-2xl p-6 shadow-lg md:col-span-2">
+       <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 bg-gradient-to-br from-teal-400 to-teal-600 rounded-xl flex items-center justify-center text-2xl">
+         🌍
+        </div>
+        <h2 class="text-xl font-bold text-gray-800">Fungsi Sosial Teks Anekdot</h2>
+       </div>
+       <div class="grid md:grid-cols-4 gap-4">
+        <div class="bg-gradient-to-br from-rose-100 to-rose-200 rounded-xl p-4 text-center">
+         <div class="text-4xl mb-2">
+          😂
+         </div>
+         <h4 class="font-bold text-rose-700">Menghibur</h4>
+         <p class="text-sm text-gray-600">Membuat pembaca tertawa dan terhibur</p>
+        </div>
+        <div class="bg-gradient-to-br from-violet-100 to-violet-200 rounded-xl p-4 text-center">
+         <div class="text-4xl mb-2">
+          🎯
+         </div>
+         <h4 class="font-bold text-violet-700">Mengkritik</h4>
+         <p class="text-sm text-gray-600">Menyampaikan kritik secara halus</p>
+        </div>
+        <div class="bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-xl p-4 text-center">
+         <div class="text-4xl mb-2">
+          📚
+         </div>
+         <h4 class="font-bold text-emerald-700">Mendidik</h4>
+         <p class="text-sm text-gray-600">Memberikan pelajaran moral</p>
+        </div>
+        <div class="bg-gradient-to-br from-amber-100 to-amber-200 rounded-xl p-4 text-center">
+         <div class="text-4xl mb-2">
+          🔍
+         </div>
+         <h4 class="font-bold text-amber-700">Refleksi</h4>
+         <p class="text-sm text-gray-600">Mengajak berpikir kritis</p>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section><!-- Tab: Contoh & Ilustrasi -->
+    <section id="section-contoh" class="tab-content hidden">
+     <div class="space-y-6"><!-- Contoh Teks Anekdot -->
+      <div class="card-hover bg-white rounded-2xl p-6 shadow-lg">
+       <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2"><span class="text-2xl">📜</span> Contoh Teks Anekdot: "Gaji Guru"</h2>
+       <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-6 comic-font">
+        <div class="space-y-4">
+         <div class="bg-white/70 rounded-lg p-3 border-l-4 border-red-400"><span class="text-xs font-bold text-red-600 uppercase">Abstraksi</span>
+          <p class="text-gray-700 mt-1">Profesi guru sering dianggap mulia tetapi kurang dihargai secara materi.</p>
+         </div>
+         <div class="bg-white/70 rounded-lg p-3 border-l-4 border-orange-400"><span class="text-xs font-bold text-orange-600 uppercase">Orientasi</span>
+          <p class="text-gray-700 mt-1">Suatu hari, seorang guru bernama Pak Budi bertemu dengan mantan muridnya yang kini menjadi pengusaha sukses di sebuah mall mewah.</p>
+         </div>
+         <div class="bg-white/70 rounded-lg p-3 border-l-4 border-yellow-400"><span class="text-xs font-bold text-yellow-600 uppercase">Krisis</span>
+          <p class="text-gray-700 mt-1">"Pak Budi! Wah, sudah lama tidak bertemu. Bapak masih mengajar?" tanya si pengusaha.</p>
+          <p class="text-gray-700 mt-1">"Iya, masih," jawab Pak Budi sambil tersenyum.</p>
+          <p class="text-gray-700 mt-1">"Kenapa tidak pindah profesi saja, Pak? Gaji guru kan kecil," ujar pengusaha itu.</p>
+         </div>
+         <div class="bg-white/70 rounded-lg p-3 border-l-4 border-green-400"><span class="text-xs font-bold text-green-600 uppercase">Reaksi</span>
+          <p class="text-gray-700 mt-1">Pak Budi tersenyum bijak, "Kalau semua guru berhenti mengajar karena gaji kecil, siapa yang akan mengajarmu hingga kamu bisa jadi pengusaha sukses seperti sekarang?"</p>
+          <p class="text-gray-700 mt-1">Pengusaha itu terdiam, wajahnya memerah malu.</p>
+         </div>
+         <div class="bg-white/70 rounded-lg p-3 border-l-4 border-blue-400"><span class="text-xs font-bold text-blue-600 uppercase">Koda</span>
+          <p class="text-gray-700 mt-1">Sejak hari itu, sang pengusaha rutin menyumbang untuk pendidikan dan selalu menghormati guru-gurunya.</p>
+         </div>
+        </div>
+       </div>
+       <div class="mt-4 p-4 bg-amber-50 rounded-xl">
+        <h4 class="font-bold text-amber-700 flex items-center gap-2"><span>💡</span> Pesan Moral:</h4>
+        <p class="text-gray-700 mt-1">Jangan pernah meremehkan jasa guru. Kesuksesan seseorang tidak lepas dari peran guru yang mendidiknya.</p>
+       </div>
+      </div><!-- Contoh Catatan Anekdot -->
+      <div class="card-hover bg-white rounded-2xl p-6 shadow-lg">
+       <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2"><span class="text-2xl">📝</span> Contoh Catatan Anekdot</h2>
+       <div class="bg-gradient-to-br from-green-50 to-teal-50 rounded-xl p-6">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+         <div class="bg-gradient-to-r from-green-500 to-teal-500 text-white p-4">
+          <h3 class="font-bold">CATATAN ANEKDOT</h3>
+         </div>
+         <div class="p-4 space-y-3">
+          <div class="grid grid-cols-2 gap-4 text-sm">
+           <div><span class="text-gray-500">Nama Siswa:</span> <span class="font-semibold ml-2">Rina Wulandari</span>
+           </div>
+           <div><span class="text-gray-500">Kelas:</span> <span class="font-semibold ml-2">X IPA 2</span>
+           </div>
+           <div><span class="text-gray-500">Tanggal:</span> <span class="font-semibold ml-2">15 Januari 2024</span>
+           </div>
+           <div><span class="text-gray-500">Waktu:</span> <span class="font-semibold ml-2">09.30 WIB</span>
+           </div>
+          </div>
+          <div class="border-t pt-3">
+           <h4 class="font-bold text-green-700 mb-2">📌 Deskripsi Peristiwa:</h4>
+           <p class="text-gray-700 text-sm leading-relaxed bg-green-50 p-3 rounded">Saat diskusi kelompok tentang teks anekdot, Rina dengan inisiatif sendiri membantu temannya yang kesulitan memahami struktur teks. Ia menjelaskan dengan sabar menggunakan contoh sederhana yang ia buat sendiri. Teman-temannya terlihat antusias mendengarkan penjelasan Rina.</p>
+          </div>
+          <div class="border-t pt-3">
+           <h4 class="font-bold text-blue-700 mb-2">🔍 Interpretasi:</h4>
+           <p class="text-gray-700 text-sm leading-relaxed bg-blue-50 p-3 rounded">Rina menunjukkan kemampuan kepemimpinan dan kepedulian sosial yang tinggi. Ia mampu menyederhanakan konsep yang sulit menjadi mudah dipahami, menunjukkan pemahaman materi yang mendalam.</p>
+          </div>
+          <div class="border-t pt-3">
+           <h4 class="font-bold text-purple-700 mb-2">📋 Rekomendasi:</h4>
+           <p class="text-gray-700 text-sm leading-relaxed bg-purple-50 p-3 rounded">Libatkan Rina sebagai tutor sebaya dalam kegiatan pembelajaran. Pertimbangkan untuk mengikutsertakan dalam olimpiade atau lomba terkait bahasa Indonesia.</p>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div><!-- Video Pembelajaran -->
+      <div class="card-hover bg-white rounded-2xl p-6 shadow-lg">
+       <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2"><span class="text-2xl">🎬</span> Video Pembelajaran</h2>
+       <div class="grid md:grid-cols-2 gap-4">
+        <div class="bg-gradient-to-br from-red-50 to-orange-50 rounded-xl p-4">
+         <div class="aspect-video bg-gray-800 rounded-lg flex items-center justify-center mb-3 relative overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-pink-600/20"></div>
+          <div class="text-center text-white z-10">
+           <div class="text-6xl mb-2">
+            ▶️
+           </div>
+           <p class="text-sm opacity-80">Video: Apa itu Teks Anekdot?</p>
+          </div>
+         </div>
+         <h4 class="font-semibold text-gray-800">Pengenalan Teks Anekdot</h4>
+         <p class="text-sm text-gray-600">Pelajari dasar-dasar teks anekdot dengan animasi menarik!</p>
+        </div>
+        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4">
+         <div class="aspect-video bg-gray-800 rounded-lg flex items-center justify-center mb-3 relative overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-cyan-600/20"></div>
+          <div class="text-center text-white z-10">
+           <div class="text-6xl mb-2">
+            ▶️
+           </div>
+           <p class="text-sm opacity-80">Video: Struktur Teks Anekdot</p>
+          </div>
+         </div>
+         <h4 class="font-semibold text-gray-800">Struktur &amp; Contoh</h4>
+         <p class="text-sm text-gray-600">Memahami struktur dengan contoh nyata!</p>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section><!-- Tab: Latihan Soal -->
+    <section id="section-quiz" class="tab-content hidden">
+     <div class="card-hover bg-white rounded-2xl p-6 shadow-lg">
+      <div class="flex items-center justify-between mb-6">
+       <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2"><span class="text-2xl">🎯</span> Latihan Soal Interaktif</h2><button onclick="resetQuiz()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-semibold transition-all"> 🔄 Ulangi Quiz </button>
+      </div><!-- Progress Bar -->
+      <div class="mb-6">
+       <div class="flex justify-between text-sm text-gray-600 mb-2"><span>Progress</span> <span id="quiz-progress">0/5 soal</span>
+       </div>
+       <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
+        <div id="progress-bar" class="progress-bar h-full rounded-full" style="width: 0%"></div>
+       </div>
+      </div><!-- Quiz Container -->
+      <div id="quiz-container"><!-- Questions will be rendered here -->
+      </div><!-- Quiz Result -->
+      <div id="quiz-result" class="hidden">
+       <div class="text-center py-8">
+        <div class="text-6xl mb-4" id="result-emoji">
+         🎉
+        </div>
+        <h3 class="text-2xl font-bold text-gray-800 mb-2">Quiz Selesai!</h3>
+        <p class="text-lg text-gray-600 mb-4">Skor kamu: <span id="final-score" class="font-bold text-indigo-600">0</span>/5</p>
+        <div id="result-message" class="bg-indigo-50 p-4 rounded-xl text-gray-700 mb-6"></div>
+        <div class="flex justify-center gap-4"><button onclick="resetQuiz()" class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all"> 🔄 Coba Lagi </button> <button onclick="saveQuizResult()" id="save-quiz-btn" class="px-6 py-3 bg-gradient-to-r from-green-500 to-teal-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all"> 💾 Simpan Hasil </button>
+        </div>
+       </div>
+      </div><!-- Student Name Input -->
+      <div id="student-name-section" class="mt-6 p-4 bg-yellow-50 rounded-xl"><label class="block text-sm font-semibold text-gray-700 mb-2">Nama Siswa (untuk menyimpan hasil):</label> <input type="text" id="student-name" placeholder="Masukkan nama kamu" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+      </div>
+     </div><!-- Saved Results -->
+     <div class="card-hover bg-white rounded-2xl p-6 shadow-lg mt-6">
+      <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2"><span class="text-xl">📊</span> Hasil Quiz Tersimpan</h3>
+      <div id="saved-results" class="space-y-3">
+       <p class="text-gray-500 text-center py-4">Belum ada hasil tersimpan</p>
+      </div>
+     </div>
+    </section><!-- Tab: Unggah Tugas -->
+    <section id="section-tugas" class="tab-content hidden">
+     <div class="grid md:grid-cols-2 gap-6"><!-- Form Unggah -->
+      <div class="card-hover bg-white rounded-2xl p-6 shadow-lg">
+       <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2"><span class="text-2xl">📤</span> Unggah Tugas Anekdot</h2>
+       <form id="task-form" class="space-y-4">
+        <div><label class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap *</label> <input type="text" id="task-name" required placeholder="Masukkan nama lengkap" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+        </div>
+        <div><label class="block text-sm font-semibold text-gray-700 mb-2">Jenis Tugas *</label> <select id="task-type" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"> <option value="">Pilih jenis tugas</option> <option value="teks_anekdot">Menulis Teks Anekdot</option> <option value="catatan_anekdot">Membuat Catatan Anekdot</option> <option value="analisis">Analisis Struktur Anekdot</option> </select>
+        </div>
+        <div><label class="block text-sm font-semibold text-gray-700 mb-2">Tugas Kamu *</label> <textarea id="task-content" required rows="8" placeholder="Tulis tugas anekdot kamu di sini..." class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all resize-none"></textarea>
+        </div><button type="submit" id="submit-task-btn" class="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2"> <span>📨</span> Kirim Tugas </button>
+       </form>
+       <div id="submit-success" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-xl">
+        <div class="flex items-center gap-2 text-green-700"><span class="text-2xl">✅</span>
+         <p class="font-semibold">Tugas berhasil dikirim!</p>
+        </div>
+       </div>
+      </div><!-- Tugas Terkumpul -->
+      <div class="card-hover bg-white rounded-2xl p-6 shadow-lg">
+       <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2"><span class="text-xl">📋</span> Tugas Terkumpul</h3>
+       <div id="submitted-tasks" class="space-y-3 max-h-96 overflow-y-auto">
+        <p class="text-gray-500 text-center py-4">Belum ada tugas terkumpul</p>
+       </div>
+      </div>
+     </div><!-- Panduan Tugas -->
+     <div class="card-hover bg-white rounded-2xl p-6 shadow-lg mt-6">
+      <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2"><span class="text-xl">📖</span> Panduan Mengerjakan Tugas</h3>
+      <div class="grid md:grid-cols-3 gap-4">
+       <div class="bg-blue-50 rounded-xl p-4">
+        <h4 class="font-bold text-blue-700 mb-2">📝 Menulis Teks Anekdot</h4>
+        <ul class="text-sm text-gray-600 space-y-1">
+         <li>• Pilih topik yang relevan</li>
+         <li>• Gunakan 5 struktur anekdot</li>
+         <li>• Sisipkan humor dan kritik</li>
+         <li>• Minimal 3 paragraf</li>
+        </ul>
+       </div>
+       <div class="bg-green-50 rounded-xl p-4">
+        <h4 class="font-bold text-green-700 mb-2">📋 Catatan Anekdot</h4>
+        <ul class="text-sm text-gray-600 space-y-1">
+         <li>• Isi identitas lengkap</li>
+         <li>• Deskripsikan peristiwa objektif</li>
+         <li>• Berikan interpretasi</li>
+         <li>• Tuliskan rekomendasi</li>
+        </ul>
+       </div>
+       <div class="bg-purple-50 rounded-xl p-4">
+        <h4 class="font-bold text-purple-700 mb-2">🔍 Analisis Struktur</h4>
+        <ul class="text-sm text-gray-600 space-y-1">
+         <li>• Identifikasi setiap bagian</li>
+         <li>• Jelaskan fungsi masing-masing</li>
+         <li>• Temukan pesan moral</li>
+         <li>• Berikan pendapat kritis</li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </section>
+   </main><!-- Footer -->
+   <footer class="bg-gray-800 text-white py-6 px-4 mt-8">
+    <div class="max-w-6xl mx-auto text-center">
+     <p class="text-gray-400 text-sm">© 2024 Materi Pembelajaran Bahasa Indonesia</p>
+     <p class="text-gray-500 text-xs mt-1">Dibuat dengan ❤️ untuk pembelajaran interaktif</p>
+    </div>
+   </footer>
+  </div>
+  <script>
+    // Default Configuration
+    const defaultConfig = {
+      page_title: 'Belajar Anekdot Seru!',
+      teacher_name: 'Bu/Pak Guru',
+      background_color: '#eef2ff',
+      surface_color: '#ffffff',
+      text_color: '#1f2937',
+      primary_action_color: '#6366f1',
+      secondary_action_color: '#8b5cf6'
+    };
+
+    let config = { ...defaultConfig };
+    let currentRecordCount = 0;
+    let allRecords = [];
+
+    // Quiz Questions
+    const quizQuestions = [
+      {
+        id: 1,
+        question: "Apa perbedaan utama antara teks anekdot dan catatan anekdot?",
+        options: [
+          "Teks anekdot adalah cerita lucu dengan kritik, catatan anekdot adalah rekaman perilaku siswa",
+          "Keduanya sama saja",
+          "Teks anekdot dibuat siswa, catatan anekdot dibuat guru",
+          "Tidak ada perbedaan"
+        ],
+        correct: 0
+      },
+      {
+        id: 2,
+        question: "Struktur teks anekdot yang BENAR adalah...",
+        options: [
+          "Orientasi - Komplikasi - Resolusi",
+          "Abstraksi - Orientasi - Krisis - Reaksi - Koda",
+          "Pembuka - Isi - Penutup",
+          "Tesis - Argumentasi - Penegasan"
+        ],
+        correct: 1
+      },
+      {
+        id: 3,
+        question: "Fungsi sosial utama teks anekdot adalah...",
+        options: [
+          "Hanya untuk menghibur pembaca",
+          "Menyampaikan kritik sosial secara halus melalui humor",
+          "Memberikan informasi faktual",
+          "Menceritakan pengalaman pribadi"
+        ],
+        correct: 1
+      },
+      {
+        id: 4,
+        question: "Komponen yang HARUS ada dalam catatan anekdot adalah...",
+        options: [
+          "Abstraksi dan koda",
+          "Identitas, deskripsi peristiwa, interpretasi, dan rekomendasi",
+          "Orientasi dan komplikasi",
+          "Hanya nama dan tanggal"
+        ],
+        correct: 1
+      },
+      {
+        id: 5,
+        question: "Bagian 'Reaksi' dalam teks anekdot berisi...",
+        options: [
+          "Pengenalan tokoh dan latar",
+          "Gambaran umum cerita",
+          "Penyelesaian yang mengejutkan atau lucu",
+          "Kesimpulan cerita"
+        ],
+        correct: 2
+      }
+    ];
+
+    let currentQuestion = 0;
+    let userAnswers = [];
+    let quizCompleted = false;
+
+    // Data SDK Handler
+    const dataHandler = {
+      onDataChanged(data) {
+        allRecords = data;
+        currentRecordCount = data.length;
+        
+        // Update quiz results display
+        const quizResults = data.filter(r => r.type === 'quiz');
+        renderSavedResults(quizResults);
+        
+        // Update submitted tasks display
+        const tasks = data.filter(r => r.type === 'task');
+        renderSubmittedTasks(tasks);
+      }
+    };
+
+    // Initialize SDKs
+    async function initializeApp() {
+      // Initialize Element SDK
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (newConfig) => {
+            config = { ...defaultConfig, ...newConfig };
+            applyConfig();
+          },
+          mapToCapabilities: (cfg) => ({
+            recolorables: [
+              {
+                get: () => cfg.background_color || defaultConfig.background_color,
+                set: (v) => { cfg.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
+              },
+              {
+                get: () => cfg.surface_color || defaultConfig.surface_color,
+                set: (v) => { cfg.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); }
+              },
+              {
+                get: () => cfg.text_color || defaultConfig.text_color,
+                set: (v) => { cfg.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+              },
+              {
+                get: () => cfg.primary_action_color || defaultConfig.primary_action_color,
+                set: (v) => { cfg.primary_action_color = v; window.elementSdk.setConfig({ primary_action_color: v }); }
+              },
+              {
+                get: () => cfg.secondary_action_color || defaultConfig.secondary_action_color,
+                set: (v) => { cfg.secondary_action_color = v; window.elementSdk.setConfig({ secondary_action_color: v }); }
+              }
+            ],
+            borderables: [],
+            fontEditable: undefined,
+            fontSizeable: undefined
+          }),
+          mapToEditPanelValues: (cfg) => new Map([
+            ['page_title', cfg.page_title || defaultConfig.page_title],
+            ['teacher_name', cfg.teacher_name || defaultConfig.teacher_name]
+          ])
+        });
+      }
+
+      // Initialize Data SDK
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error('Failed to initialize Data SDK');
+        }
+      }
+
+      // Initialize quiz
+      renderQuiz();
+      applyConfig();
+    }
+
+    function applyConfig() {
+      const pageTitle = document.getElementById('page-title');
+      const teacherInfo = document.getElementById('teacher-info');
+      
+      if (pageTitle) pageTitle.textContent = config.page_title || defaultConfig.page_title;
+      if (teacherInfo) teacherInfo.textContent = `👩‍🏫 Guru: ${config.teacher_name || defaultConfig.teacher_name}`;
+    }
+
+    // Tab Navigation
+    function switchTab(tabName) {
+      // Hide all sections
+      document.querySelectorAll('.tab-content').forEach(section => {
+        section.classList.add('hidden');
+      });
+      
+      // Remove active class from all tabs
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('tab-active');
+        btn.classList.add('bg-gray-100', 'hover:bg-gray-200');
+      });
+      
+      // Show selected section
+      const targetSection = document.getElementById(`section-${tabName}`);
+      if (targetSection) {
+        targetSection.classList.remove('hidden');
+      }
+      
+      // Add active class to selected tab
+      const targetTab = document.getElementById(`tab-${tabName}`);
+      if (targetTab) {
+        targetTab.classList.add('tab-active');
+        targetTab.classList.remove('bg-gray-100', 'hover:bg-gray-200');
+      }
+    }
+
+    // Quiz Functions
+    function renderQuiz() {
+      const container = document.getElementById('quiz-container');
+      if (!container) return;
+      
+      if (quizCompleted) {
+        container.classList.add('hidden');
+        document.getElementById('quiz-result').classList.remove('hidden');
+        return;
+      }
+      
+      container.classList.remove('hidden');
+      document.getElementById('quiz-result').classList.add('hidden');
+      
+      const question = quizQuestions[currentQuestion];
+      const answered = userAnswers[currentQuestion] !== undefined;
+      
+      container.innerHTML = `
+        <div class="slide-in">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm font-semibold">
+              Soal ${currentQuestion + 1}
+            </span>
+          </div>
+          <h3 class="text-lg font-bold text-gray-800 mb-4">${question.question}</h3>
+          <div class="space-y-3">
+            ${question.options.map((option, idx) => {
+              let classes = 'quiz-option p-4 border-2 border-gray-200 rounded-xl';
+              if (answered) {
+                if (idx === question.correct) {
+                  classes += ' correct';
+                } else if (userAnswers[currentQuestion] === idx && idx !== question.correct) {
+                  classes += ' incorrect';
+                }
+              } else if (userAnswers[currentQuestion] === idx) {
+                classes += ' selected';
+              }
+              return `
+                <div class="${classes}" onclick="${answered ? '' : `selectAnswer(${idx})`}">
+                  <div class="flex items-center gap-3">
+                    <span class="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full font-semibold text-sm">
+                      ${String.fromCharCode(65 + idx)}
+                    </span>
+                    <span class="text-gray-700">${option}</span>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+          ${answered ? `
+            <div class="mt-4 p-4 ${userAnswers[currentQuestion] === question.correct ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'} rounded-xl">
+              <p class="font-semibold ${userAnswers[currentQuestion] === question.correct ? 'text-green-700' : 'text-red-700'}">
+                ${userAnswers[currentQuestion] === question.correct ? '✅ Benar!' : '❌ Kurang tepat!'}
+              </p>
+              <p class="text-sm text-gray-600 mt-1">Jawaban yang benar: ${String.fromCharCode(65 + question.correct)}. ${question.options[question.correct]}</p>
+            </div>
+          ` : ''}
+          <div class="flex justify-between mt-6">
+            <button onclick="prevQuestion()" class="px-4 py-2 ${currentQuestion === 0 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'} rounded-lg font-semibold transition-all" ${currentQuestion === 0 ? 'disabled' : ''}>
+              ← Sebelumnya
+            </button>
+            ${currentQuestion < quizQuestions.length - 1 ? `
+              <button onclick="nextQuestion()" class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-semibold transition-all">
+                Selanjutnya →
+              </button>
+            ` : `
+              <button onclick="finishQuiz()" class="px-4 py-2 bg-gradient-to-r from-green-500 to-teal-500 hover:shadow-lg text-white rounded-lg font-semibold transition-all" ${!answered ? 'disabled' : ''}>
+                Selesai ✓
+              </button>
+            `}
+          </div>
+        </div>
+      `;
+      
+      updateProgress();
+    }
+
+    function selectAnswer(idx) {
+      userAnswers[currentQuestion] = idx;
+      renderQuiz();
+    }
+
+    function nextQuestion() {
+      if (currentQuestion < quizQuestions.length - 1) {
+        currentQuestion++;
+        renderQuiz();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        renderQuiz();
+      }
+    }
+
+    function finishQuiz() {
+      quizCompleted = true;
+      const score = userAnswers.filter((ans, idx) => ans === quizQuestions[idx].correct).length;
+      
+      document.getElementById('quiz-container').classList.add('hidden');
+      const resultDiv = document.getElementById('quiz-result');
+      resultDiv.classList.remove('hidden');
+      
+      document.getElementById('final-score').textContent = score;
+      
+      let emoji, message;
+      if (score === 5) {
+        emoji = '🏆';
+        message = 'Luar biasa! Kamu menguasai materi dengan sempurna!';
+      } else if (score >= 4) {
+        emoji = '🌟';
+        message = 'Hebat! Pemahaman kamu sangat baik!';
+      } else if (score >= 3) {
+        emoji = '👍';
+        message = 'Bagus! Terus tingkatkan pemahamanmu ya!';
+      } else {
+        emoji = '💪';
+        message = 'Semangat! Coba pelajari lagi materinya dan ulangi quiz ini.';
+      }
+      
+      document.getElementById('result-emoji').textContent = emoji;
+      document.getElementById('result-message').textContent = message;
+      
+      updateProgress();
+    }
+
+    function resetQuiz() {
+      currentQuestion = 0;
+      userAnswers = [];
+      quizCompleted = false;
+      renderQuiz();
+    }
+
+    function updateProgress() {
+      const answeredCount = userAnswers.filter(a => a !== undefined).length;
+      const total = quizQuestions.length;
+      const percentage = (answeredCount / total) * 100;
+      
+      document.getElementById('quiz-progress').textContent = `${answeredCount}/${total} soal`;
+      document.getElementById('progress-bar').style.width = `${percentage}%`;
+    }
+
+    async function saveQuizResult() {
+      const studentName = document.getElementById('student-name').value.trim();
+      if (!studentName) {
+        const nameInput = document.getElementById('student-name');
+        nameInput.classList.add('border-red-500');
+        nameInput.focus();
+        nameInput.placeholder = 'Nama harus diisi!';
+        return;
+      }
+
+      if (currentRecordCount >= 999) {
+        const btn = document.getElementById('save-quiz-btn');
+        btn.textContent = '⚠️ Penyimpanan penuh!';
+        btn.disabled = true;
+        return;
+      }
+
+      const score = userAnswers.filter((ans, idx) => ans === quizQuestions[idx].correct).length;
+      const btn = document.getElementById('save-quiz-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="animate-spin">⏳</span> Menyimpan...';
+
+      const result = await window.dataSdk.create({
+        id: Date.now().toString(),
+        type: 'quiz',
+        student_name: studentName,
+        answers: JSON.stringify(userAnswers),
+        score: score,
+        submitted_at: new Date().toISOString(),
+        task_text: ''
+      });
+
+      if (result.isOk) {
+        btn.innerHTML = '✅ Tersimpan!';
+        btn.classList.remove('from-green-500', 'to-teal-500');
+        btn.classList.add('from-gray-400', 'to-gray-500');
+      } else {
+        btn.innerHTML = '❌ Gagal menyimpan';
+        btn.disabled = false;
+      }
+    }
+
+    function renderSavedResults(results) {
+      const container = document.getElementById('saved-results');
+      if (!container) return;
+
+      if (results.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-4">Belum ada hasil tersimpan</p>';
+        return;
+      }
+
+      container.innerHTML = results.slice().reverse().slice(0, 10).map(r => `
+        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+          <div>
+            <p class="font-semibold text-gray-800">${r.student_name}</p>
+            <p class="text-xs text-gray-500">${new Date(r.submitted_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+          </div>
+          <div class="text-right">
+            <span class="px-3 py-1 ${r.score >= 4 ? 'bg-green-100 text-green-700' : r.score >= 3 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'} rounded-full text-sm font-bold">
+              ${r.score}/5
+            </span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Task Form Handling
+    document.getElementById('task-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('task-name').value.trim();
+      const type = document.getElementById('task-type').value;
+      const content = document.getElementById('task-content').value.trim();
+      
+      if (!name || !type || !content) return;
+
+      if (currentRecordCount >= 999) {
+        document.getElementById('submit-success').innerHTML = `
+          <div class="flex items-center gap-2 text-amber-700">
+            <span class="text-2xl">⚠️</span>
+            <p class="font-semibold">Penyimpanan penuh! Hubungi guru.</p>
+          </div>
+        `;
+        document.getElementById('submit-success').classList.remove('hidden', 'bg-green-50', 'border-green-200');
+        document.getElementById('submit-success').classList.add('bg-amber-50', 'border-amber-200');
+        return;
+      }
+
+      const btn = document.getElementById('submit-task-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="animate-spin">⏳</span> Mengirim...';
+
+      const typeLabels = {
+        'teks_anekdot': 'Menulis Teks Anekdot',
+        'catatan_anekdot': 'Membuat Catatan Anekdot',
+        'analisis': 'Analisis Struktur Anekdot'
+      };
+
+      const result = await window.dataSdk.create({
+        id: Date.now().toString(),
+        type: 'task',
+        student_name: name,
+        answers: type,
+        score: 0,
+        submitted_at: new Date().toISOString(),
+        task_text: content
+      });
+
+      if (result.isOk) {
+        document.getElementById('submit-success').classList.remove('hidden');
+        document.getElementById('task-form').reset();
+        btn.innerHTML = '<span>📨</span> Kirim Tugas';
+        btn.disabled = false;
+        
+        setTimeout(() => {
+          document.getElementById('submit-success').classList.add('hidden');
+        }, 3000);
+      } else {
+        btn.innerHTML = '❌ Gagal mengirim';
+        btn.disabled = false;
+      }
+    });
+
+    function renderSubmittedTasks(tasks) {
+      const container = document.getElementById('submitted-tasks');
+      if (!container) return;
+
+      if (tasks.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-4">Belum ada tugas terkumpul</p>';
+        return;
+      }
+
+      const typeLabels = {
+        'teks_anekdot': '📝 Teks Anekdot',
+        'catatan_anekdot': '📋 Catatan Anekdot',
+        'analisis': '🔍 Analisis'
+      };
+
+      container.innerHTML = tasks.slice().reverse().map(t => `
+        <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-semibold text-gray-800">${t.student_name}</span>
+            <span class="text-xs px-2 py-1 bg-indigo-100 text-indigo-700 rounded-full">${typeLabels[t.answers] || t.answers}</span>
+          </div>
+          <p class="text-sm text-gray-600 line-clamp-2">${t.task_text.substring(0, 150)}${t.task_text.length > 150 ? '...' : ''}</p>
+          <p class="text-xs text-gray-400 mt-2">${new Date(t.submitted_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+        </div>
+      `).join('');
+    }
+
+    // Initialize on load
+    initializeApp();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9dafc2847315819c',t:'MTc3MzI4NjY0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
